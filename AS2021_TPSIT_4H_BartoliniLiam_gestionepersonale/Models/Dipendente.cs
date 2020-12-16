@@ -99,7 +99,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
 
             CalcoloCodiceFiscale();
 
-            return "Dati aggiunti correttamente, riaccedere al profilo!";
+            return "Dati aggiunti correttamente, riaccedere al account per visualizzare le modifiche!";
         }
 
         public string ModificaDati(string user, string psw, string reparto)
@@ -108,7 +108,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
             Password = (psw == "") ? Password : psw;
             Reparto = (reparto == "") ? Reparto : reparto;
 
-            return $"Modifica dati eseguita correttamente, riaccedere al profilo!";
+            return $"Modifica dati eseguita correttamente, riaccedere all'account con le nuove credenziali!";
         }
 
         public bool Autenticazione(string username, string password) => (UserName == username && Password == password) ? true : false;
@@ -291,7 +291,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
             int contNome = 0;
             int numConsonanti = ContaConsonanti(Nome);
 
-            //########NOME###### |||| NECESSARIE 1a 3a 4a
+            //########NOME######
             numConsonanti = ContaConsonanti(Nome);
             int contConsonanti = 0;
 
@@ -365,8 +365,9 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
             }
 
             // Aggiunto eventuali vocali/'X'
-
-            bool flagNome = false;
+            
+            // Flag per controllare se il numero di char per il nome è pieno
+            bool flagNome = true;
 
             if (contCognome + contNome < 6)
             {
@@ -385,30 +386,26 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
                                     contNome++;
                                 }
                             }
-                            flagNome = true;
+                            else
+                                flagNome = false;
                         }
                     }
                 }
 
-                if (!flagNome)
+                if (flagNome)
                 {
                     if (contNome < 3)
                     {
-                        for (int i = 0; i < nomeChar.Length; i++)
+                        for (int i = contNome; i < 3; i++)
                         {
-                            if (vocali.Contains(nomeChar[i]))
-                            {
-                                sb.Append(nomeChar[i]);
-                                contNome++;
-                            }
+                            sb.Append('X');
                         }
                     }
                 }
             }
-            //##################
         }
 
-        public string AggiuntaComuneCF()
+        string AggiuntaComuneCF()
         {
             string path = @"ListaComuni.csv";
 
@@ -430,7 +427,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
                 throw new Exception("File \"Comuni\" non disponibile, comune di default Rimini (H394)");
         }
 
-        public void CalcoloCodiceFiscale()
+        void CalcoloCodiceFiscale()
         {
             List<char> mesi = new List<char>() { 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' };
 
@@ -450,9 +447,16 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
                 sb.Append($"{DataDiNascita.Day + 40}");
 
             // Aggiungo il comune
-            sb.Append(AggiuntaComuneCF());
+            try
+            {
+                sb.Append(AggiuntaComuneCF());
+            }
+            catch
+            {
+                sb.Append("H394");
+            }
 
-            // Calcolo ed inserisco la lettera di controllo
+            // Calcolo ed aggiungo la lettera di controllo
             int controllChar = CalcoloLetteraControlloCF();
             sb.Append(lettere[controllChar]);
 
@@ -462,14 +466,10 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
         int CalcoloLetteraControlloCF()
         {
             int[] dispari = new int[] { 1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8, 12, 14, 16, 10, 22, 25, 24, 23 };
-
             char[] CFChar = sb.ToString().ToCharArray();
-
             int retVal = 0;
 
-            int lenght = sb.ToString().Length;
-
-            for (int i = 0; i < lenght; i++)
+            for (int i = 0; i < sb.ToString().Length; i++)
             {
                 // Lo zero è considerato numero dispari
                 if ((i + 1) == 1)
