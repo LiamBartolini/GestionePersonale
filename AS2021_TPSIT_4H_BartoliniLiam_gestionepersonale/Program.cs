@@ -64,7 +64,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
                     "6512356",
                     "ITTS Rimin O.Belluzzi L.DaVinci",
                     "4H",
-                    "Saludecio",
+                    "Rimini",
                     "Via Tambroni, 9"
                     ));
 
@@ -100,9 +100,6 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
 
                 Console.ResetColor();
             }
-
-
-            Console.WriteLine(dipendente.AggiuntaComuneCF());
             Console.ReadLine();
         }
     }
