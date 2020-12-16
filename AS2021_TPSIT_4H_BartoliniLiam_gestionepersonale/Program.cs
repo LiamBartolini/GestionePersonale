@@ -7,8 +7,11 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
     {
         static void Main(string[] args)
         {
+            // Credo un dipendente senza codice fiscale (verrà generato alla riga 62)
             Dipendente dipendente = new Dipendente();
             Dipendente.NuovoDipendente();
+
+            // Creo un dipendente ed in automatico gli assegnoil codice fiscale
             Dipendente dipendente1 = new Dipendente(
                 "Lorenzo",
                 "Bartolini",
@@ -22,6 +25,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
                 "Rimini",
                 "Via Tambroni, 9"
                 );
+
             Dipendente.NuovoDipendente();
 
             bool flag = false;
@@ -38,6 +42,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
 
                 if (dipendente.Autenticazione(strUser, strPass))
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Accesso Eseguito come {dipendente.Nome} {dipendente.Cognome}");
 
                     // Imposto una bandierina che mi permette di capire se l'utente ha fatto il logIn
@@ -45,17 +50,24 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
                     break;
                 }
                 else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Accesso negato, ricontrollare Username e password!");
+                    Console.ResetColor();
+                }
             }
+
+            Console.ResetColor();
 
             if (flag)
             {
                 flag = false;
 
-                // Stampo i dati generati automaticamente
+                // Stampo i dati riferiti ad un dipendente
                 Console.WriteLine(dipendente.VisualizzazioneDati());
 
-                // Aggiungo i dati
+                // Aggiungo i dati e genero il CF
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(dipendente.AggiungiDati(
                     "Liam",
                     "Bartolini",
@@ -68,13 +80,14 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
                     "Via Tambroni, 9"
                     ));
 
-                // Ne modifico Username e psw e il reparto
+                // Ne modifico modifico username psw e reparto (se scrivo [""] vegono lasciati i valori di default
                 Console.WriteLine(dipendente.ModificaDati(
                         "liam",
                         "bartolini",
-                        "4H"
+                        "5H"
                     ));
 
+                Console.ResetColor();
                 while (true)
                 {
                     Console.Write("\nUsername: ");
@@ -85,19 +98,24 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
 
                     if (dipendente.Autenticazione(strUser, strPass))
                     {
-                        Console.WriteLine($"Accesso Eseguito come {dipendente.Nome} {dipendente.Cognome}");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"\nAccesso Eseguito come {dipendente.Nome} {dipendente.Cognome}");
                         flag = true;
                     }
                     else
-                        Console.WriteLine("Accesso negato, ricontrollare Username e password");
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Accesso negato, ricontrollare Username e password!");
+                    }
+
+                    Console.ResetColor();
 
                     if (flag)
                         break;
                 }
 
-                Console.WriteLine(dipendente.VisualizzazioneDati());
+                Console.WriteLine("\n"+dipendente.VisualizzazioneDati());
                 Console.WriteLine(dipendente.StampaTesseraSanitaria());
-
                 Console.ResetColor();
             }
             Console.ReadLine();
