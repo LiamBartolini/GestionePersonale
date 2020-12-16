@@ -408,13 +408,23 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
             //##################
         }
 
-        void AggiuntaComuneCF()
+        public string AggiuntaComuneCF()
         {
             string path = @"ListaComuni.csv";
             if (File.Exists(path))
             {
                 StreamReader sr = new StreamReader(path);
+                
+                while(!sr.EndOfStream)
+                {
+                    string row = sr.ReadLine();
+                    string[] colonne = row.Split(',');
 
+                    if (string.Compare(Comune, colonne[2]) == 0)
+                        return colonne[3];
+                }
+                
+                return "H294";
             }
             else
                 throw new Exception("File Comuni non disponibile, comune di default Rimini (H394)");
@@ -440,8 +450,8 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
                 sb.Append($"{DataDiNascita.Day + 40}");
 
             // Aggiungo il comune
-            sb.Append("H294");
-            AggiuntaComuneCF();
+            //sb.Append("H294");
+            sb.Append(AggiuntaComuneCF());
 
             // Calcolo ed inserisco la lettera di controllo
             int controllChar = CalcoloLetteraControlloCF();
