@@ -52,13 +52,13 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
         public Dipendente()
         {
             // Imposto username a psw per il primo accesso
-            UserName = "UserName";
-            Password = "Psw";
-            DataDiNascita = Convert.ToDateTime("10/10/10");
+            UserName = "user";
+            Password = "psw";
 
-            _dipendenti++;
+            DataDiNascita = Convert.ToDateTime("10/10/10");
         }
 
+        // Costruttore standard
         public Dipendente(string nome, string cognome, string sesso, string data, string cellulare, string user, string psw, string azienda, string reparto, string comune, string domicilio)
         {
             Nome = nome;
@@ -79,30 +79,33 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
 
             // Calcolo il codice fiscale
             CalcoloCodiceFiscale();
-            _dipendenti++;
         }
+
+        public static void NuovoDipendente() => _dipendenti++;
 
         public string AggiungiDati(string nome, string cognome, string sesso, string data, string cellulare, string azienda, string reparto, string comune, string domicilio)
         {
             Nome = nome;
             Cognome = cognome;
             Sesso = sesso;
-            DataDiNascita = Convert.ToDateTime(data);
+            DataDiNascita = (data == "") ? Convert.ToDateTime("10/10/10") : Convert.ToDateTime(data);
             NumeroCellulare = cellulare;
-            Azienda = azienda;
-            Reparto = reparto;
-            Comune = comune;
-            Domicilio = domicilio;
+
+            Azienda = (azienda == "") ? Azienda : azienda;
+            Reparto = (reparto == "") ? Reparto : reparto;
+            Comune = (comune == "") ? Comune : comune;
+            Domicilio = (domicilio == "") ? Domicilio : domicilio;
 
             CalcoloCodiceFiscale();
+
             return "Dati aggiunti correttamente, riaccedere al profilo!";
         }
 
         public string ModificaDati(string user, string psw, string reparto)
         {
-            UserName = user;
-            Password = psw;
-            Reparto = reparto;
+            UserName = (user == "") ? UserName : user;
+            Password = (psw == "") ? Password : psw;
+            Reparto = (reparto == "") ? Reparto : reparto;
 
             return $"Modifica dati eseguita correttamente, riaccedere al profilo!";
         }
@@ -141,7 +144,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
             if (DataDiNascita.ToString() != "10/10/10")
                 sb.AppendLine($"Data di Nascita:\t{DataDiNascita:dd/MM/yyyy}");
             else
-                sb.AppendLine($"Data di Nascita:");
+                sb.AppendLine($"Data di Nascita: NaN");
 
             sb.AppendLine($"Numero di Cellulare:\t{NumeroCellulare}");
             sb.AppendLine($"Reparto:\t\t{Reparto}");
@@ -183,7 +186,6 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
             sb.AppendLine($"|\t\t\tdi nascita\t\t\t\t|");
             sb.AppendLine("-----------------------------------------------------------------");
             sb.AppendLine("\n");
-
 
             sb.AppendLine("\t\t\tRetro\t\t\t\t\t   ");
             sb.AppendLine("-------------------------------------------------------------------");

@@ -8,6 +8,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
         static void Main(string[] args)
         {
             Dipendente dipendente = new Dipendente();
+            Dipendente.NuovoDipendente();
             Dipendente dipendente1 = new Dipendente(
                 "Lorenzo",
                 "Bartolini",
@@ -21,6 +22,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
                 "Rimini",
                 "Via Tambroni, 9"
                 );
+            Dipendente.NuovoDipendente();
 
             bool flag = false;
             string strUser = "";
@@ -50,13 +52,15 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
             {
                 flag = false;
 
+                // Stampo i dati generati automaticamente
                 Console.WriteLine(dipendente.VisualizzazioneDati());
 
+                // Aggiungo i dati
                 Console.WriteLine(dipendente.AggiungiDati(
-                    "Francesca",
-                    "Tiraferri",
-                    "F",
-                    "06/01/1980",
+                    "Liam",
+                    "Bartolini",
+                    "M",
+                    "29/01/2003",
                     "6512356",
                     "ITTS Rimin O.Belluzzi L.DaVinci",
                     "4H",
@@ -64,10 +68,10 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
                     "Via Tambroni, 9"
                     ));
 
-                Console.WriteLine(dipendente.ModificaDati
-                    (
-                        "User",
-                        "Psw",
+                // Ne modifico Username e psw e il reparto
+                Console.WriteLine(dipendente.ModificaDati(
+                        "liam",
+                        "bartolini",
                         "4H"
                     ));
 
