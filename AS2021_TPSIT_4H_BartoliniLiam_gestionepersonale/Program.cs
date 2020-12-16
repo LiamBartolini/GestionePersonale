@@ -77,7 +77,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
 
                 while (true)
                 {
-                    Console.Write("Username: ");
+                    Console.Write("\nUsername: ");
                     strUser = Console.ReadLine();
 
                     Console.Write("Password: ");
@@ -101,6 +101,8 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale
                 Console.ResetColor();
             }
 
+
+            dipendente.AggiuntaComuneCF();
             Console.ReadLine();
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
 {
@@ -171,7 +172,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
             sb.AppendLine($"|\t\t\tCognome  {Cognome.ToUpper()}\t\t\t|");
             sb.AppendLine($"|\t\t\t\t\t\t\t\t|");
 
-            sb.AppendLine($"|\t\t\tNome     {Nome.ToUpper()}\t\t\t|");
+            sb.AppendLine($"|\t\t\tNome     {Nome.ToUpper()}\t\t\t\t|");
             sb.AppendLine($"|\t\t\t\t\t\t\t\t|");
 
             sb.AppendLine($"|Data di\t\tLuogo    {Comune.ToUpper()}\t\t\t\t|");
@@ -197,7 +198,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
             sb.AppendLine($"|{Cognome.ToUpper()}\t\t\t\t\t\t\t  |");
 
             sb.AppendLine($"|4 Nome\t\t\t\t\t\t5 Data di nascita |");
-            sb.AppendLine($"|{Nome.ToUpper()}\t\t\t\t\t\t{DataDiNascita:dd/MM/yyyy}|");
+            sb.AppendLine($"|{Nome.ToUpper()}\t\t\t\t\t\t{DataDiNascita:dd/MM/yyyy}\t  |");
 
             sb.AppendLine($"|6 identificazione personale\t7 identificazione dell'istituzione|");
             sb.AppendLine($"|{CodiceFiscale}\t\t\tSSN-MIN SALUTE - 500001   |");
@@ -211,19 +212,13 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
             return sb.ToString();
         }
 
-        public void CalcoloCodiceFiscale()
+        int CalcoloCognomeCF()
         {
-            List<char> mesi = new List<char>() { 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' };
-
             char[] cognomeChar = Cognome.ToUpper().ToCharArray();
             int contCognome = 0;
-
-            char[] nomeChar = Nome.ToUpper().ToCharArray();
-            int contNome = 0;
-
             int numConsonanti = ContaConsonanti(Cognome);
 
-            //#####COGNOME######
+            // Prendo le consonanti
             if (numConsonanti >= 3)
             {
 
@@ -263,7 +258,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
                 }
             }
 
-            // Aggiungo eventuali vocali
+            // Aggiungo vocali/'X'
             if (contCognome < 3)
             {
                 for (int i = 0; i < cognomeChar.Length; i++)
@@ -279,7 +274,6 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
                 }
             }
 
-            // Aggiungo eventuali 'X'
             if (contCognome < 3)
             {
                 for (int i = contCognome; i < 3; i++)
@@ -287,6 +281,15 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
                     sb.Append('X');
                 }
             }
+
+            return contCognome;
+        }
+
+        void CalcoloNomeCF(int contCognome)
+        {
+            char[] nomeChar = Nome.ToUpper().ToCharArray();
+            int contNome = 0;
+            int numConsonanti = ContaConsonanti(Nome);
 
             //########NOME###### |||| NECESSARIE 1a 3a 4a
             numConsonanti = ContaConsonanti(Nome);
@@ -361,6 +364,8 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
                 }
             }
 
+            // Aggiunto eventuali vocali/'X'
+
             bool flagNome = false;
 
             if (contCognome + contNome < 6)
@@ -387,7 +392,6 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
 
                 if (!flagNome)
                 {
-                    // Aggiungo eventuali 'X'
                     if (contNome < 3)
                     {
                         for (int i = 0; i < nomeChar.Length; i++)
@@ -402,6 +406,26 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
                 }
             }
             //##################
+        }
+
+        void AggiuntaComuneCF()
+        {
+            string path = @"ListaComuni.csv";
+            if (File.Exists(path))
+            {
+                StreamReader sr = new StreamReader(path);
+
+            }
+            else
+                throw new Exception("File Comuni non disponibile, comune di default Rimini (H394)");
+        }
+
+        public void CalcoloCodiceFiscale()
+        {
+            List<char> mesi = new List<char>() { 'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T' };
+
+            int contCognome = CalcoloCognomeCF();
+            CalcoloNomeCF(contCognome);
 
             // Aggiungo l'anno
             sb.Append($"{DataDiNascita:yy}");
@@ -417,6 +441,7 @@ namespace AS2021_TPSIT_4H_BartoliniLiam_gestionepersonale.Models
 
             // Aggiungo il comune
             sb.Append("H294");
+            AggiuntaComuneCF();
 
             // Calcolo ed inserisco la lettera di controllo
             int controllChar = CalcoloLetteraControlloCF();
